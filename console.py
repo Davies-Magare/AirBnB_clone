@@ -80,6 +80,25 @@ class HBNBCommand(cmd.Cmd):
         values = line.split()
         return values[:4]
 
+    @staticmethod
+    def add_new_attr(updt_vals, obj):
+        """Add a new attribute to the object."""
+        val = getattr(obj, updt_vals[2], False)
+        if val == False:
+            setattr(obj, updt_vals[2], updt_vals[3])
+            obj.save()
+            return True
+        return False
+
+    @staticmethod
+    def set_existing_attr(updt_vals, obj):
+        """Updates the values for existing attributes."""
+        val = getattr(obj, updt_vals[2])
+        type_val = type(val)
+        attr_val = type_val(updt_vals[3])
+        setattr(obj, updt_vals[2], attr_val)
+        obj.save()
+
     def do_update(self, line):
         """Updates an instance based on class name and id."""
         name = self.check_class_name(line)
@@ -92,12 +111,10 @@ class HBNBCommand(cmd.Cmd):
                     updt_vals = self.get_update_values(line)
                     key = self.get_key(line)
                     obj = obj_dict[key]
-                    val = getattr(obj, updt_vals[2], False)
-                    if val == False:
-                        setattr(obj, updt_vals[2], updt_vals[3])
-                        obj.save()
-                    else:
-                        pass
+                    new = self.add_new_attr(updt_vals, obj)
+                    if new == False:
+                        self.set_existing_attr(updt_vals, obj)
+
 
     def do_all(self, line):
         """Prints all the objects regardless of class name."""
