@@ -90,8 +90,14 @@ class HBNBCommand(cmd.Cmd):
                 attrs = self.check_attrs(line)
                 if attrs == True:
                     updt_vals = self.get_update_values(line)
-                    print(updt_vals)
-                    print("All good :).")
+                    key = self.get_key(line)
+                    obj = obj_dict[key]
+                    val = getattr(obj, updt_vals[2], False)
+                    if val == False:
+                        setattr(obj, updt_vals[2], updt_vals[3])
+                        obj.save()
+                    else:
+                        pass
 
     def do_all(self, line):
         """Prints all the objects regardless of class name."""
@@ -152,9 +158,18 @@ class HBNBCommand(cmd.Cmd):
 
         return True
 
+    #Convenience functions
     def do_clear(self, line):
         """Clear the screen."""
         os.system('clear')
+
+    def do_show_file(self, line):
+        """Display the object storage file."""
+        os.system('cat obj_storage.json')
+
+    def do_rm(self, line):
+        """Deletes the object storage file."""
+        os.system('rm obj_storage.json')
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
