@@ -64,6 +64,35 @@ class HBNBCommand(cmd.Cmd):
         name_id = key.split('.')
         return name_id[0]
 
+    @staticmethod
+    def check_attrs(line):
+        vals = line.split()
+        tot_val = len(vals)
+        if tot_val < 3:
+            print("** attribute name missing **")
+        elif tot_val < 4:
+            print("** value missing **")
+        else:
+            return True
+
+    @staticmethod
+    def get_update_values(line):
+        values = line.split()
+        return values[:4]
+
+    def do_update(self, line):
+        """Updates an instance based on class name and id."""
+        name = self.check_class_name(line)
+        if name:
+            obj_dict = self.get_dict()
+            valid_id = self.check_id(line, obj_dict)
+            if valid_id == True:
+                attrs = self.check_attrs(line)
+                if attrs == True:
+                    updt_vals = self.get_update_values(line)
+                    print(updt_vals)
+                    print("All good :).")
+
     def do_all(self, line):
         """Prints all the objects regardless of class name."""
         obj_dict = self.get_dict()
