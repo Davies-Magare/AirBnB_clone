@@ -8,6 +8,7 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 
+
 class FileStorage:
     """
     Serializes instances to a JSON file and deserializes
@@ -29,9 +30,6 @@ class FileStorage:
 
     def save(self):
         """Serializes __objects to JSON file."""
-        #Convert all the objects to dictionaries
-        #set them in a new dictionary
-        #serialize that dictionary
         new_dict = {}
         for key, value in self.__objects.items():
             new_value = value.to_dict()
@@ -42,15 +40,12 @@ class FileStorage:
 
     def reload(self):
         """Deserializes the JSON file to __objects."""
-        #Get the string from the file and convert it back to dict
         try:
             with open(self.__file_path) as file_obj:
                 dict_str = file_obj.read()
             if dict_str:
                 rel_dict = json.loads(dict_str)
                 new_dict = {}
-                #Get the key(classname.id as str) and then use it with
-                #eval to recreate the object.
                 for key, value in rel_dict.items():
                     key_id = key.split('.')
                     if key_id[0] in globals():
