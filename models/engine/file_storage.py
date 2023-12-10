@@ -1,6 +1,12 @@
 #!/usr/bin/python3
 import json
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 class FileStorage:
     """
@@ -40,14 +46,14 @@ class FileStorage:
         try:
             with open(self.__file_path) as file_obj:
                 dict_str = file_obj.read()
-            rel_dict = json.loads(dict_str)
-            new_dict = {}
-            #Get the key(classname.id as str) and then use it with
-            #eval to recreate the object.
-            for key, value in rel_dict.items():
-                key_id = key.split('.')
-                obj = globals()[key_id[0]](**value)
-                new_dict[key] = obj
-            self.__objects = new_dict
+            if dict_str:
+                rel_dict = json.loads(dict_str)
+                new_dict = {}
+                #Get the key(classname.id as str) and then use it with
+                #eval to recreate the object.
+                for key, value in rel_dict.items():
+                    key_id = key.split('.')
+                    if key_id[0] in globals():
+                        obj = globals()[key_id[0]](**value)
         except Exception:
             pass

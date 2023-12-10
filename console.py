@@ -3,6 +3,12 @@
 
 import cmd
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 import models
 import os
 
@@ -86,7 +92,7 @@ class HBNBCommand(cmd.Cmd):
         val = getattr(obj, updt_vals[2], False)
         if val == False:
             setattr(obj, updt_vals[2], updt_vals[3])
-            obj.save()
+            models.storage.save()
             return True
         return False
 
@@ -97,7 +103,7 @@ class HBNBCommand(cmd.Cmd):
         type_val = type(val)
         attr_val = type_val(updt_vals[3])
         setattr(obj, updt_vals[2], attr_val)
-        obj.save()
+        models.storage.save()
 
     def do_update(self, line):
         """Updates an instance based on class name and id."""
@@ -164,11 +170,12 @@ class HBNBCommand(cmd.Cmd):
         """
         obj_class = self.check_class_name(name)
         if obj_class:
+            #recreate the __objects dictionary
             models.storage.reload()
+            #create the new object
             obj = obj_class()
-            print(obj)
             print(obj.id)
-            obj.save()
+            models.storage.save()
 
     def do_quit(self, line):
         """Exits the console."""
